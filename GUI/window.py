@@ -2,8 +2,11 @@ from tkinter import *
 from tkinter import filedialog
 import os
 from PIL import ImageTk, Image
-
+from eigenface import *
+import numpy as np
+import time
 global new, imeg
+
 def btn():
     print("Button Clicked")
 
@@ -46,9 +49,45 @@ def btn2():
         if len(copyfolnly) > 22 :
             copyfolnly = copyfolnly[:22]
         canvas.itemconfig(NoFolC ,text = copyfolnly)
-'''
+
 def btnstart() :
-    return 0 '''
+    starttime = time.time()
+    default_size = [256,256]
+    [X,y] = read_images(folderdirac,default_size)
+
+    [eigenval,eigenvec,mean] = pca(as_row_matrix(X),y)
+
+    T=[]
+
+    numb = eigenvec.shape[1]
+    for i in range (min(numb, 16)):
+        e = eigenvec[:,i].reshape(X[0].shape )
+        T.append(np.asarray(e))
+
+    projections = []
+    for xi in X:
+        projections.append(project (eigenvec, xi.reshape(1 , -1) , mean))
+
+    image = Image.open(filename)
+    image = image.convert ("L")
+    if (DEFAULT_SIZE is not None ):
+        image = image.resize (DEFAULT_SIZE , Image.Resampling.LANCZOS )
+    test_image = np. asarray (image , dtype =np. uint8 )
+    predicted = predict(eigenvec, mean , projections, y, test_image)
+    '''
+    imeg = X[predicted]
+    frame1 = Frame(window, width= 256, height= 256)
+    frame1.pack()
+    frame1.place(x= 951, y= 218, anchor=NW)
+
+    labeldis = Label(frame1,image=imeg)
+    labeldis.pack()
+    '''
+    endtime = time.time()
+    tottime = endtime-starttime
+    timez = str(tottime)
+    canvas.itemconfig(TimeEx ,text = timez)
+
 
 
 window = Tk()
@@ -75,7 +114,7 @@ b0 = Button(
     image = img0,
     borderwidth = 0,
     highlightthickness = 0,
-    command = btn,
+    command = btnstart,
     relief = "flat")
 
 b0.place(

@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from PIL import Image
+import time
 
 
 IMAGE_DIR = 'training-images'
@@ -80,28 +81,3 @@ def predict (W, mu , projections, y, X):
     return minClass
 
 ## RUN SEMENTARA
-[X,y] = read_images()
-
-averageMat = np.reshape(as_row_matrix(X).mean(axis=0), X[0].shape)
-
-[eigenval,eigenvec,mean] = pca(as_row_matrix(X),y)
-
-T=[]
-
-numb = eigenvec.shape[1]
-for i in range (min(numb, 16)):
-    e = eigenvec[:,i].reshape(X[0].shape )
-    T.append(np.asarray(e))
-
-projections = []
-for xi in X:
-    projections.append(project (eigenvec, xi.reshape(1 , -1) , mean))
-
-image = Image.open("test.jpg")
-image = image.convert ("L")
-if (DEFAULT_SIZE is not None ):
-    image = image.resize (DEFAULT_SIZE , Image.Resampling.LANCZOS )
-test_image = np. asarray (image , dtype =np. uint8 )
-predicted = predict(eigenvec, mean , projections, y, test_image)
-
-print(y[predicted])

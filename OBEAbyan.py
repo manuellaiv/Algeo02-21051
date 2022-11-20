@@ -29,3 +29,18 @@ def addrow(M, s, i, j):
     for k in range(a):
         M[i][k] += s * M[j][k]
     return M
+
+# matriks segitiga atas
+def toUpper(M):
+    for i in range(len(M)):
+        for ii in range(i+1, len(M)):
+            r = M[ii][i]/M[i][i]
+            for j in range(len(M[0])):
+                M[ii][j] = M[ii][j] - r*M[i][j]
+    return M
+
+M = toUpper(M)
+for i in range(len(M)):
+    for j in range(len(M[0])):
+        print(M[i][j], end=" ")
+    print()

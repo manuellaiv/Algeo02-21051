@@ -1,15 +1,17 @@
+import numpy as np
+
 # Ambil matriks M
-# x = int(input("baris matriks A: "))
-# y = int(input("kolom matriks A: "))
-# M = [[0 for j in range (y)] for i in range (x)]
-# for i in range (x):
-#     for j in range (y):
-#        M[i][j] = int(input("Masukkan nilai A" + f"[{str(i + 1)}]" + f"[{str(j + 1)}]" + ": "))
-# print("\nMatriks A: ")
-# for i in range(x):
-#     for j in range(y):
-#         print(M[i][j], end=" ")
-#     print()
+x = int(input("baris matriks A: "))
+y = int(input("kolom matriks A: "))
+M = [[0 for j in range (y)] for i in range (x)]
+for i in range (x):
+    for j in range (y):
+        M[i][j] = int(input("Masukkan nilai A" + f"[{str(i + 1)}]" + f"[{str(j + 1)}]" + ": "))
+print("\nMatriks A: ")
+for i in range(x):
+    for j in range(y):
+        print(M[i][j], end=" ")
+    print()
 
 # Ubah baris
 def switchrow(M, i, j):
@@ -48,3 +50,24 @@ def det(M):
     for i in range(len(Mn)):
         d = d*Mn[i][i]
     return d
+
+# Matriks identitas
+def identity():
+    dimensi = x
+    M[i][j] = np.identity(dimensi, dtype="float")
+    return(M[i][j])
+
+
+A = np.asmatrix(M)
+print(A)
+B = np.asmatrix(identity())
+print(B)
+
+# Matriks lambda*I
+def identity(M):
+    s = "T"
+    dimensi = x
+    M[i][j] = np.identity(dimensi, dtype="float")
+    M[i][j] = s * M[i][j]
+    return M
+print(identity(M))

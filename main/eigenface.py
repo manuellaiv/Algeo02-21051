@@ -23,17 +23,17 @@ def read_images(image_path=IMAGE_DIR, default_size=DEFAULT_SIZE):
             images_names.append(image_dir)
     return [images,images_names]
 
-def as_row_matrix (X):
-    if len (X) == 0:
+def rowmatrix(X):
+    if len(X) == 0:
         return np. array ([])
     mat = np. empty ((0 , X [0].size ), dtype =X [0]. dtype )
     for row in X:
-        mat = np.vstack(( mat , np.asarray( row ).reshape(1 , -1))) # 1 x r*c 
+        mat = np.vstack((mat,np.asarray(row).reshape(1,-1)))
     return mat
 
 
 def NComp(eigenvalues, variance=.95):
-    for i, eigen_value_cumsum in enumerate(np.cumsum(eigenvalues) / np.sum(eigenvalues)):
+    for i, eigen_value_cumsum in enumerate(np.cumsum(eigenvalues)/np.sum(eigenvalues)):
         if eigen_value_cumsum > variance:
             return i
 
@@ -41,8 +41,8 @@ def pca(X,y,num_components =0):
     [n,d] = X.shape
     if (num_components <= 0) or (num_components >n):
         num_components = n
-        mu = X.mean( axis =0)
-        X = X - mu
+        m = X.mean( axis =0)
+        X = X - m
     if n>d:
         C = np.dot(X.T,X)
         [ eigenvalues , eigenvectors ] = np.linalg.eigh(C)
@@ -58,23 +58,23 @@ def pca(X,y,num_components =0):
     num_components = NComp(eigenvalues)
     eigenvalues = eigenvalues [0: num_components ].copy ()
     eigenvectors = eigenvectors [: ,0: num_components ].copy ()
-    return [ eigenvalues , eigenvectors , mu]
+    return [eigenvalues,eigenvectors,m]
 
 
-def project(W,X,mu):
-    return np.dot(X-mu ,W)
+def project(W,X,m):
+    return np.dot(X-m ,W)
 
 def distance(p,q):
     p = np.asarray(p).flatten()
     q = np.asarray (q).flatten()
-    return np.sqrt (np.sum (np.power ((p-q) ,2)))
+    return np.sqrt(np.sum(np.power((p-q),2)))
 
-def predict (W, mu , projections, y, X):
+def predict (W, m , projections, y, X):
     minDist = float("inf")
     minClass = -1
-    Q = project(W, X.reshape (1 , -1) , mu)
+    Q = project(W, X.reshape (1 , -1),m)
     for i in range(len(projections)):
-        dist = distance(projections[i], Q)
+        dist = distance(projections[i],Q)
         if dist < minDist:
             minDist = dist
             minClass = i

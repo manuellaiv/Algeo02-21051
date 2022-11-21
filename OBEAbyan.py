@@ -33,7 +33,7 @@ M, V = eigens(A)
 # print(r)
 
 
-[V1,M1] = np.linalg.eig(A)
+[V1,M1] = np.linalg.eigh(A)
 print(M1)
 print(M)
 print()

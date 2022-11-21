@@ -7,6 +7,9 @@ import numpy as np
 import time
 global new, imeg
 
+def is_an_image(fpath): 
+    return os.path.splitext(fpath)[-1] in ('.jpg',)
+
 def btn():
     print("Button Clicked")
 
@@ -17,17 +20,17 @@ def btn1():
     new = ''
 
     filename = filedialog.askopenfilename()
-    head, tail = os.path.split(filename) # tail = nama file tanpa direct
+    head, tail = os.path.split(filename)
     
     if tail != '' :
-        copytail = tail # Buat display nama file tak lebih dari 22 char.
+        copytail = tail
         if len(copytail) > 22 :
             copytail = copytail[:22]
         canvas.itemconfig(NoFileC, text = copytail)
 
         # Load image
         imeg = Image.open(filename)
-        resized = imeg.resize((256,256), Image.ANTIALIAS)
+        resized = imeg.resize((256,256), Image.Resampling.LANCZOS)
         new = ImageTk.PhotoImage(resized)
         frame1 = Frame(window, width= 256, height= 256)
         frame1.pack()
@@ -42,10 +45,9 @@ def btn2():
     folderdirac = ''
 
     folderdirac = filedialog.askdirectory() 
-    # print(folderdirac)
     folderonly = os.path.basename(folderdirac)
     if folderonly != '' :
-        copyfolnly = folderonly # Buat display nama folder tak lebih dari 22 char.
+        copyfolnly = folderonly
         if len(copyfolnly) > 22 :
             copyfolnly = copyfolnly[:22]
         canvas.itemconfig(NoFolC ,text = copyfolnly)
@@ -55,7 +57,7 @@ def btnstart() :
     default_size = [256,256]
     [X,y] = read_images(folderdirac,default_size)
 
-    [eigenval,eigenvec,mean] = pca(as_row_matrix(X),y)
+    [eigenval,eigenvec,mean] = pca(rowmatrix(X),y)
 
     T=[]
 
@@ -67,22 +69,29 @@ def btnstart() :
     projections = []
     for xi in X:
         projections.append(project (eigenvec, xi.reshape(1 , -1) , mean))
-
-    image = Image.open(filename)
-    image = image.convert ("L")
+    
+    imageT = Image.open(filename)
+    imageT = imageT.convert ("L")
     if (DEFAULT_SIZE is not None ):
-        image = image.resize (DEFAULT_SIZE , Image.Resampling.LANCZOS )
-    test_image = np. asarray (image , dtype =np. uint8 )
-    predicted = predict(eigenvec, mean , projections, y, test_image)
-    '''
-    imeg = X[predicted]
+        imageT = imageT.resize (DEFAULT_SIZE , Image.Resampling.LANCZOS )
+    test_image = np.asarray(imageT,dtype=np.uint8 )
+    predicted = predict(eigenvec,mean,projections,y,test_image)
+    
+    imeg_path1 = os.path.join(folderdirac,y[predicted])
+    all_files_recursive = sum([[os.path.join(root, f) for f in files] for root, dirs, files in os.walk(imeg_path1)], [])
+    first_image_file = next(filter(is_an_image, all_files_recursive))
+    imeg2 = Image.open(first_image_file)
+    imeg = ImageTk.PhotoImage(imeg2)
+
     frame1 = Frame(window, width= 256, height= 256)
     frame1.pack()
-    frame1.place(x= 951, y= 218, anchor=NW)
+    frame1.place(x= 951, y= 257, anchor=NW)
 
     labeldis = Label(frame1,image=imeg)
     labeldis.pack()
-    '''
+    
+    canvas.itemconfig(Result ,text = y[predicted])
+
     endtime = time.time()
     tottime = endtime-starttime
     timez = str(tottime)

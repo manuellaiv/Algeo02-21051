@@ -32,7 +32,13 @@ M, V = eigens(A)
 # print("Eigenvalue: ")
 # print(r)
 
-print(np.linalg.eig(A))
+
+[V1,M1] = np.linalg.eig(A)
+print(M1)
+print(M)
+print()
+print(V)
+print(V1) 
 
 
 # import numpy as np

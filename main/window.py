@@ -68,7 +68,7 @@ def btnstart() :
 
     projections = []
     for xi in X:
-        projections.append(project (eigenvec, xi.reshape(1 , -1) , mean))
+        projections.append(project (eigenvec, xi.reshape(1,-1) , mean))
     
     imageT = Image.open(filename)
     imageT = imageT.convert ("L")
@@ -77,11 +77,11 @@ def btnstart() :
     test_image = np.asarray(imageT,dtype=np.uint8 )
     predicted = predict(eigenvec,mean,projections,y,test_image)
     
-    imeg_path1 = os.path.join(folderdirac,y[predicted])
-    all_files_recursive = sum([[os.path.join(root, f) for f in files] for root, dirs, files in os.walk(imeg_path1)], [])
-    first_image_file = next(filter(is_an_image, all_files_recursive))
-    imeg2 = Image.open(first_image_file)
-    imeg = ImageTk.PhotoImage(imeg2)
+    imeg2 = Image.fromarray(X[predicted])
+    imeg2.save('hasil.jpg')
+    imeg = Image.open('hasil.jpg')
+    resized = imeg2.resize((256,256), Image.Resampling.LANCZOS)
+    imeg = ImageTk.PhotoImage(resized)
 
     frame1 = Frame(window, width= 256, height= 256)
     frame1.pack()
@@ -93,8 +93,8 @@ def btnstart() :
     canvas.itemconfig(Result ,text = y[predicted])
 
     endtime = time.time()
-    tottime = endtime-starttime
-    timez = str(tottime)
+    tottime = round(endtime-starttime,4)
+    timez = str(tottime) + " seconds"
     canvas.itemconfig(TimeEx ,text = timez)
 
 

@@ -53,6 +53,7 @@ def btn2():
         canvas.itemconfig(NoFolC ,text = copyfolnly)
 
 def btnstart() :
+    global imeg3
     starttime = time.time()
     default_size = [256,256]
     [X,y] = read_images(folderdir,default_size)
@@ -80,15 +81,15 @@ def btnstart() :
     if (predicted != -1):
         imeg2 = Image.fromarray(X[predicted])
         imeg2.save('hasil.jpg')
-        imeg = Image.open('hasil.jpg')
+        imeg3 = Image.open('hasil.jpg')
         resized = imeg2.resize((256,256),Image.Resampling.LANCZOS)
-        imeg = ImageTk.PhotoImage(resized)
+        imeg3 = ImageTk.PhotoImage(resized)
 
         frame1 = Frame(window, width= 256, height= 256)
         frame1.pack()
         frame1.place(x= 951, y= 257, anchor=NW)
 
-        labeldis = Label(frame1,image=imeg)
+        labeldis = Label(frame1,image=imeg3)
         labeldis.pack()
         
         canvas.itemconfig(Result ,text = y[predicted])

@@ -78,7 +78,7 @@ def predict(W,m,projections,y,X):
             minDist = dist
             minClass = i
 
-    if minDist < 0.05 :
+    if minDist > 0.05 :
         return minClass
     else:
         return -1

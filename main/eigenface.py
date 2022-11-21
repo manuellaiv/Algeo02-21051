@@ -4,24 +4,23 @@ from PIL import Image
 import time
 from feigen import *
 
-IMAGE_DIR = 'training-images'
 DEFAULT_SIZE = [256, 256] 
 
-def read_images(image_path=IMAGE_DIR, default_size=DEFAULT_SIZE):
+def read_images(image_path, default_size=DEFAULT_SIZE):
     images = []
-    images_names = []
-    image_dirs = [image for image in os.listdir(image_path) if not image.startswith('.')]
-    for image_dir in image_dirs:
+    img_nm = []
+    img_dir = [image for image in os.listdir(image_path) if not image.startswith('.')]
+    for image_dir in img_dir:
         dir_path = os.path.join(image_path, image_dir)
         image_names = [image for image in os.listdir(dir_path) if not image.startswith('.')]
         for image_name in image_names:
-            image = Image.open (os.path.join(dir_path, image_name))
+            image = Image.open(os.path.join(dir_path, image_name))
             image = image.convert ("L")
             if (default_size is not None ):
-                image = image.resize (default_size , Image.Resampling.LANCZOS )
-            images.append(np.asarray (image , dtype =np. uint8 ))
-            images_names.append(image_dir)
-    return [images,images_names]
+                image = image.resize (default_size,Image.Resampling.LANCZOS)
+            images.append(np.asarray (image,dtype =np.uint8))
+            img_nm.append(image_dir)
+    return [images,img_nm]
 
 def rowmatrix(X):
     if len(X) == 0:
@@ -32,9 +31,9 @@ def rowmatrix(X):
     return mat
 
 
-def NComp(eigenvalues, variance=.95):
-    for i, eigen_value_cumsum in enumerate(np.cumsum(eigenvalues)/np.sum(eigenvalues)):
-        if eigen_value_cumsum > variance:
+def NComp(eigval, variance=.95):
+    for i, eigvalcs in enumerate(np.cumsum(eigval)/np.sum(eigval)):
+        if eigvalcs > variance:
             return i
 
 def pca(X,y,jComp =0):
@@ -45,20 +44,20 @@ def pca(X,y,jComp =0):
         X = X-m
     if n>d:
         C = np.dot(X.T,X)
-        [eigenvalues,eigenvectors] = np.linalg.eig(C)
+        [eigval,eigvecs] = np.linalg.eig(C)
     else :
         C = np.dot(X,X.T)
-        [eigenvalues,eigenvectors] = np.linalg.eig(C)
-        eigenvectors = np.dot(X.T,eigenvectors)
+        [eigval,eigvecs] = np.linalg.eig(C)
+        eigvecs = np.dot(X.T,eigvecs)
         for i in range (n):
-            eigenvectors [:,i] = eigenvectors [:,i]/ np.linalg.norm(eigenvectors [:,i])
-    idx = np.argsort(- eigenvalues )
-    eigenvalues = eigenvalues[idx]
-    eigenvectors = eigenvectors [:,idx]
-    jComp = NComp(eigenvalues)
-    eigenvalues = eigenvalues [0:jComp].copy ()
-    eigenvectors = eigenvectors [:,0:jComp].copy ()
-    return [eigenvalues,eigenvectors,m]
+            eigvecs [:,i] = eigvecs [:,i]/ np.linalg.norm(eigvecs [:,i])
+    idx = np.argsort(- eigval )
+    eigval = eigval[idx]
+    eigvecs = eigvecs [:,idx]
+    jComp = NComp(eigval)
+    eigval = eigval [0:jComp].copy ()
+    eigvecs = eigvecs [:,0:jComp].copy ()
+    return [eigval,eigvecs,m]
 
 
 def project(W,X,m):
@@ -66,7 +65,7 @@ def project(W,X,m):
 
 def eucDist(p,q):
     p = np.asarray(p).flatten()
-    q = np.asarray (q).flatten()
+    q = np.asarray(q).flatten()
     return np.sqrt(np.sum(np.power((p-q),2)))
 
 def predict(W,m,projections,y,X):

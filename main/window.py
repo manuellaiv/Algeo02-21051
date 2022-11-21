@@ -77,20 +77,24 @@ def btnstart() :
     test_image = np.asarray(imageT,dtype=np.uint8 )
     predicted = predict(eigenvec,mean,projections,y,test_image)
     
-    imeg2 = Image.fromarray(X[predicted])
-    imeg2.save('hasil.jpg')
-    imeg = Image.open('hasil.jpg')
-    resized = imeg2.resize((256,256), Image.Resampling.LANCZOS)
-    imeg = ImageTk.PhotoImage(resized)
+    if (predicted != -1):
+        imeg2 = Image.fromarray(X[predicted])
+        imeg2.save('hasil.jpg')
+        imeg = Image.open('hasil.jpg')
+        resized = imeg2.resize((256,256), Image.Resampling.LANCZOS)
+        imeg = ImageTk.PhotoImage(resized)
 
-    frame1 = Frame(window, width= 256, height= 256)
-    frame1.pack()
-    frame1.place(x= 951, y= 257, anchor=NW)
+        frame1 = Frame(window, width= 256, height= 256)
+        frame1.pack()
+        frame1.place(x= 951, y= 257, anchor=NW)
 
-    labeldis = Label(frame1,image=imeg)
-    labeldis.pack()
-    
-    canvas.itemconfig(Result ,text = y[predicted])
+        labeldis = Label(frame1,image=imeg)
+        labeldis.pack()
+        
+        canvas.itemconfig(Result ,text = y[predicted])
+    else:
+        errorText = "Tidak ada foto yang cocok"
+        canvas.itemconfig(Result ,text = errorText)
 
     endtime = time.time()
     tottime = round(endtime-starttime,3)

@@ -78,6 +78,10 @@ def predict(W,m,projections,y,X):
         if dist < minDist:
             minDist = dist
             minClass = i
-    return minClass
+
+    if minDist < 0.05 :
+        return minClass
+    else:
+        return -1
 
 ## RUN SEMENTARA

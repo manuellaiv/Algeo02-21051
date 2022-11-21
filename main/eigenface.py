@@ -64,17 +64,17 @@ def pca(X,y,jComp =0):
 def project(W,X,m):
     return np.dot(X-m ,W)
 
-def distance(p,q):
+def eucDist(p,q):
     p = np.asarray(p).flatten()
     q = np.asarray (q).flatten()
     return np.sqrt(np.sum(np.power((p-q),2)))
 
-def predict (W, m , projections, y, X):
+def predict(W,m,projections,y,X):
     minDist = float("inf")
     minClass = -1
-    Q = project(W, X.reshape (1 , -1),m)
+    Q = project(W,X.reshape(1,-1),m)
     for i in range(len(projections)):
-        dist = distance(projections[i],Q)
+        dist = eucDist(projections[i],Q)
         if dist < minDist:
             minDist = dist
             minClass = i

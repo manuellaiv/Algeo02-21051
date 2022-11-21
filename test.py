@@ -1,14 +1,12 @@
-# Ambil matriks M
-x = int(input("baris matriks A: "))
-y = int(input("kolom matriks A: "))
-M = [[0 for j in range (y)] for i in range (x)]
-for i in range (x):
-    for j in range (y):
-        M[i][j] = int(input("Masukkan nilai A" + f"[{str(i + 1)}]" + f"[{str(j + 1)}]" + ": "))
-print("\nMatriks A: ")
-for i in range(x):
-    for j in range(y):
-        print(M[i][j], end=" ")
-    print()
+import numpy as np
+from sympy import Matrix, Symbol
 
-# Mencari lambda*I
+k = Symbol('k')
+
+u = np.array([k-3, 0])
+v = np.array([-8, k+1])
+
+z = [u, v]
+
+A = Matrix(z)
+print(A.det())

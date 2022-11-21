@@ -25,20 +25,19 @@ def eigens(A, ulang=100000):
     return M, V
 
 M, V = eigens(A)
+[M1,V1] = np.linalg.eig(A)
 
-# print("Eigenvektor: ")
-# print(QQ)
-# r = np.diag(Ak)
-# print("Eigenvalue: ")
-# print(r)
-
-
-[V1,M1] = np.linalg.eigh(A)
-print(M1)
-print(M)
-print()
+print("Eigenvektor: ")
 print(V)
-print(V1) 
+r = np.diag(M)
+print("Eigenvalue: ")
+print(r) 
+
+print("EigenvektorNumpy = ")
+print(V1)
+
+print("EigenvalueNumpy = ")
+print(M1)
 
 
 # import numpy as np

@@ -93,7 +93,7 @@ def btnstart() :
     canvas.itemconfig(Result ,text = y[predicted])
 
     endtime = time.time()
-    tottime = round(endtime-starttime,4)
+    tottime = round(endtime-starttime,3)
     timez = str(tottime) + " seconds"
     canvas.itemconfig(TimeEx ,text = timez)
 

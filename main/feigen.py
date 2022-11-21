@@ -8,7 +8,7 @@ A = [[3, 0],
 # print("A=")
 # print(tabulate(A))
 
-def eigens(A, ulang=100000):
+def eigens(A, ulang=50):
     M = np.copy(A)
     n = M.shape[0]
     V = np.eye(n)
@@ -22,22 +22,22 @@ def eigens(A, ulang=100000):
             # print("A",k,"=")
             # print(tabulate(Ak))
             # print("\n")
-    return M, V
+    return [V,M]
 
-M, V = eigens(A)
-[M1,V1] = np.linalg.eig(A)
+# M, V = eigens(A)
+# [M1,V1] = np.linalg.eig(A)
 
-print("Eigenvektor: ")
-print(V)
-r = np.diag(M)
-print("Eigenvalue: ")
-print(r) 
+# print("Eigenvektor: ")
+# print(V)
+# r = np.diag(M)
+# print("Eigenvalue: ")
+# print(r) 
 
-print("EigenvektorNumpy = ")
-print(V1)
+# print("EigenvektorNumpy = ")
+# print(V1)
 
-print("EigenvalueNumpy = ")
-print(M1)
+# print("EigenvalueNumpy = ")
+# print(M1)
 
 
 # import numpy as np

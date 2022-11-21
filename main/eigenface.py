@@ -2,7 +2,7 @@ import os
 import numpy as np
 from PIL import Image
 import time
-
+from feigen import *
 
 IMAGE_DIR = 'training-images'
 DEFAULT_SIZE = [256, 256] 
@@ -37,27 +37,27 @@ def NComp(eigenvalues, variance=.95):
         if eigen_value_cumsum > variance:
             return i
 
-def pca(X,y,num_components =0):
+def pca(X,y,jComp =0):
     [n,d] = X.shape
-    if (num_components <= 0) or (num_components >n):
-        num_components = n
-        m = X.mean( axis =0)
-        X = X - m
+    if (jComp<=0) or (jComp>n):
+        jComp = n
+        m = X.mean(axis=0)
+        X = X-m
     if n>d:
         C = np.dot(X.T,X)
-        [ eigenvalues , eigenvectors ] = np.linalg.eigh(C)
+        [eigenvalues,eigenvectors] = np.linalg.eig(C)
     else :
-        C = np.dot (X,X.T)
-        [ eigenvalues , eigenvectors ] = np.linalg.eigh(C)
-        eigenvectors = np.dot(X.T, eigenvectors )
+        C = np.dot(X,X.T)
+        [eigenvalues,eigenvectors] = np.linalg.eig(C)
+        eigenvectors = np.dot(X.T,eigenvectors)
         for i in range (n):
             eigenvectors [:,i] = eigenvectors [:,i]/ np.linalg.norm(eigenvectors [:,i])
-    idx = np.argsort (- eigenvalues )
-    eigenvalues = eigenvalues [idx ]
-    eigenvectors = eigenvectors [:, idx ]
-    num_components = NComp(eigenvalues)
-    eigenvalues = eigenvalues [0: num_components ].copy ()
-    eigenvectors = eigenvectors [: ,0: num_components ].copy ()
+    idx = np.argsort(- eigenvalues )
+    eigenvalues = eigenvalues[idx]
+    eigenvectors = eigenvectors [:,idx]
+    jComp = NComp(eigenvalues)
+    eigenvalues = eigenvalues [0:jComp].copy ()
+    eigenvectors = eigenvectors [:,0:jComp].copy ()
     return [eigenvalues,eigenvectors,m]
 
 

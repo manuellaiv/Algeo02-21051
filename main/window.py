@@ -58,23 +58,23 @@ def btnstart() :
     default_size = [256,256]
     [X,y] = read_images(folderdir,default_size)
 
-    [eigenval,eigenvec,mean] = pca(rowmatrix(X),y)
+    [eigenvec,mean] = pca(rowmatrix(X),y)
 
     T=[]
 
     numb = eigenvec.shape[1]
     for i in range (min(numb, 16)):
-        e = eigenvec[:,i].reshape(X[0].shape )
+        e = eigenvec[:,i].reshape(X[0].shape)
         T.append(np.asarray(e))
 
     projections = []
     for xi in X:
-        projections.append(project(eigenvec, xi.reshape(1,-1), mean))
+        projections.append(project(eigenvec,xi.reshape(1,-1),mean))
     
     imageT = Image.open(filename)
     imageT = imageT.convert("L")
-    if (DEFAULT_SIZE is not None ):
-        imageT = imageT.resize(DEFAULT_SIZE,Image.Resampling.LANCZOS )
+    if (DEFAULT_SIZE is not None):
+        imageT = imageT.resize(DEFAULT_SIZE,Image.Resampling.LANCZOS)
     test_image = np.asarray(imageT,dtype=np.uint8 )
     predicted = predict(eigenvec,mean,projections,y,test_image,X)
     

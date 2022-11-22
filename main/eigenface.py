@@ -1,8 +1,6 @@
 import os
 import numpy as np
 from PIL import Image
-import time
-from feigen import *
 
 DEFAULT_SIZE = [256, 256] 
 
@@ -23,18 +21,28 @@ def read_images(image_path, default_size=DEFAULT_SIZE):
     return [images,img_nm]
 
 def rowmatrix(X):
-    if len(X) == 0:
+    if len(X)==0:
         return np. array ([])
-    mat = np. empty ((0 , X [0].size ), dtype =X [0]. dtype )
+    mat = np.empty((0,X[0].size),dtype=X[0].dtype)
     for row in X:
         mat = np.vstack((mat,np.asarray(row).reshape(1,-1)))
     return mat
 
-
-def NComp(eigval, variance=.95):
-    for i, eigvalcs in enumerate(np.cumsum(eigval)/np.sum(eigval)):
+def NComp(C, variance=.95):
+    [eigvals,eigvecs] = np.linalg.eig(C)
+    for i, eigvalcs in enumerate(np.cumsum(eigvals)/np.sum(eigvals)):
         if eigvalcs > variance:
             return i
+def eigenvecs(A):
+    N = len(A)
+    Q = np.random.rand(N,N)
+    Q,_ = np.linalg.qr(Q)
+
+    for i in range(15):
+        QR = np.matmul(A,Q)
+        Q,_ = np.linalg.qr(QR)
+    
+    return [Q]
 
 def pca(X,y,jComp =0):
     [n,d] = X.shape
@@ -44,20 +52,16 @@ def pca(X,y,jComp =0):
         X = X-m
     if n>d:
         C = np.dot(X.T,X)
-        [eigval,eigvecs] = np.linalg.eig(C)
+        [eigvecs] = eigenvecs(C)
     else :
         C = np.dot(X,X.T)
-        [eigval,eigvecs] = np.linalg.eig(C)
+        [eigvecs] = eigenvecs(C)
         eigvecs = np.dot(X.T,eigvecs)
         for i in range (n):
-            eigvecs [:,i] = eigvecs [:,i]/ np.linalg.norm(eigvecs [:,i])
-    idx = np.argsort(- eigval )
-    eigval = eigval[idx]
-    eigvecs = eigvecs [:,idx]
-    jComp = NComp(eigval)
-    eigval = eigval [0:jComp].copy ()
+            eigvecs[:,i]=eigvecs [:,i]/np.linalg.norm(eigvecs[:,i])
+    jComp = NComp(C)
     eigvecs = eigvecs [:,0:jComp].copy ()
-    return [eigval,eigvecs,m]
+    return [eigvecs,m]
 
 def project(Mat,X,m):
     return np.dot(X-m ,Mat)

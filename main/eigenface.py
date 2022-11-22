@@ -59,28 +59,37 @@ def pca(X,y,jComp =0):
     eigvecs = eigvecs [:,0:jComp].copy ()
     return [eigval,eigvecs,m]
 
-
-def project(W,X,m):
-    return np.dot(X-m ,W)
+def project(Mat,X,m):
+    return np.dot(X-m ,Mat)
 
 def eucDist(p,q):
     p = np.asarray(p).flatten()
     q = np.asarray(q).flatten()
     return np.sqrt(np.sum(np.power((p-q),2)))
 
-def predict(W,m,projections,y,X):
+def predict(Mat,m,projections,y,V,X):
     minDist = float("inf")
     minClass = -1
-    Q = project(W,X.reshape(1,-1),m)
+    Q = project(Mat,V.reshape(1,-1),m)
     for i in range(len(projections)):
         dist = eucDist(projections[i],Q)
         if dist < minDist:
             minDist = dist
             minClass = i
 
-    if minDist > 0.05 :
+    th = threshold(projections)
+
+    if minDist < th:
         return minClass
     else:
         return -1
 
-## RUN SEMENTARA
+def threshold(projections) :
+    maxDist = -1
+    for i in range(len(projections)):
+        for j in range(len(projections)):
+            dist = eucDist(projections[i],projections[j])
+            if (dist > maxDist and dist != 0):
+                maxDist = dist
+    return (maxDist/2)
+

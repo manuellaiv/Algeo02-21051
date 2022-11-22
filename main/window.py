@@ -69,14 +69,14 @@ def btnstart() :
 
     projections = []
     for xi in X:
-        projections.append(project (eigenvec, xi.reshape(1,-1) , mean))
+        projections.append(project(eigenvec, xi.reshape(1,-1), mean))
     
     imageT = Image.open(filename)
     imageT = imageT.convert("L")
     if (DEFAULT_SIZE is not None ):
         imageT = imageT.resize(DEFAULT_SIZE,Image.Resampling.LANCZOS )
     test_image = np.asarray(imageT,dtype=np.uint8 )
-    predicted = predict(eigenvec,mean,projections,y,test_image)
+    predicted = predict(eigenvec,mean,projections,y,test_image,X)
     
     if (predicted != -1):
         imeg2 = Image.fromarray(X[predicted])
@@ -94,6 +94,16 @@ def btnstart() :
         
         canvas.itemconfig(Result ,text = y[predicted])
     else:
+        imeg3 = Image.open('notfound.png')
+        resized = imeg2.resize((256,256),Image.Resampling.LANCZOS)
+        imeg3 = ImageTk.PhotoImage(resized)
+
+        frame1 = Frame(window, width= 256, height= 256)
+        frame1.pack()
+        frame1.place(x= 951, y= 257, anchor=NW)
+
+        labeldis = Label(frame1,image=imeg3)
+        labeldis.pack()
         errorText = "Tidak ada foto yang cocok"
         canvas.itemconfig(Result ,text = errorText)
 

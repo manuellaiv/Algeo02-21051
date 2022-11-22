@@ -10,7 +10,7 @@ Kelompok 5 (IndomieLovers) beranggotakan:
 
 ## Cara Melakukan Aksi Program
 1) Buka program
-2) Ketik "cd main" pada terminal
+2) Ketik "cd src" pada terminal
 3) _Run_ window.py
 
 Selamat menikmati dan bereksperimen dengan program yang telah kami buat.

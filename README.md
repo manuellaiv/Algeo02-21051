@@ -9,7 +9,7 @@ Kelompok 5 (IndomieLovers) beranggotakan:
 - Moh. Aghna Maysan Abyan (13521076)
 
 ## Bahasa Pemograman yang Digunakan
-Java
+Python
 
 ## Cara Melakukan Aksi Program
 1) Buka program
